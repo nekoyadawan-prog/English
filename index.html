@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>店舗英語マスタークイズ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Fredoka:wght@600;700&display=swap');
+        
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .font-english {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .custom-shadow {
+            box-shadow: 0 6px 0px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-press {
+            transition: all 0.1s ease;
+        }
+
+        .btn-press:active {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0px rgba(0, 0, 0, 0.12);
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .pulse-btn {
+            animation: pulse-subtle 2s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-800 min-h-screen flex flex-col justify-center items-center p-3 sm:p-6 overflow-x-hidden">
+
+    <!-- App Container -->
+    <div id="app" class="w-full max-w-md bg-slate-100 rounded-3xl shadow-2xl overflow-hidden border-4 border-slate-700 relative flex flex-col min-h-[660px] justify-between">
+        
+        <!-- Header Banner -->
+        <header class="bg-blue-600 text-white p-4 relative border-b-4 border-blue-800 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid font-bold text-2xl text-yellow-300 fa-store"></i>
+                <div>
+                    <h1 class="font-bold text-xs sm:text-sm tracking-wide leading-tight text-blue-100">店舗英語マスター</h1>
+                    <span id="rank-badge" class="text-xs bg-yellow-400 text-slate-900 px-2 py-0.5 rounded-full font-bold inline-block">新人バイト</span>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-xs text-blue-200 font-bold">SCORE</div>
+                <div class="flex items-baseline gap-0.5 justify-end">
+                    <span id="score-display" class="font-english font-bold text-2xl sm:text-3xl text-yellow-300 leading-none">0</span>
+                    <span class="text-xs text-yellow-200 font-bold">/ 100pt</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-300 h-3 border-b border-slate-400 relative">
+            <div id="progress-bar" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="p-4 sm:p-5 flex-grow flex flex-col justify-center relative">
+
+            <!-- 1. START SCREEN -->
+            <div id="screen-start" class="flex flex-col items-center justify-center text-center py-2 space-y-5">
+                <div class="relative floating">
+                    <div class="w-28 h-28 sm:w-32 sm:h-32 bg-blue-500 rounded-full flex items-center justify-center text-white text-5xl sm:text-6xl border-4 border-white shadow-lg mx-auto">
+                        🏪
+                    </div>
+                    <span class="absolute -bottom-2 -right-2 bg-yellow-400 text-xs font-bold px-2 py-1 rounded-lg border-2 border-slate-800 shadow">
+                        シャッフル対応 🔀
+                    </span>
+                </div>
+
+                <div class="space-y-2">
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">
+                        現場でつかえる！<br>
+                        <span class="text-blue-600">コンビニ＆店舗英語クイズ</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-600 px-2 leading-relaxed">
+                        遊ぶたびに問題と選択肢順がシャッフル！誤答の理由や他の選択肢の意味までまるわかりの超丁寧解説つきです。
+                    </p>
+                </div>
+
+                <div class="w-full bg-white p-3 rounded-2xl border-2 border-slate-200 text-left text-xs space-y-1.5 text-slate-600 shadow-sm">
+                    <div class="font-bold text-slate-700 border-b pb-1 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-star text-amber-500"></i> ゲームの特徴
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-check text-emerald-500"></i> 出題順・選択肢が毎回シャッフルされ何度でも挑戦可能！
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-check text-emerald-500"></i> 「選んだ選択肢がどういう意味だったか」までしっかり解説！
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-check text-emerald-500"></i> 前陳・ゴミ箱・給湯・廃棄ルールなど実践英語が満載
+                    </div>
+                </div>
+
+                <button id="btn-start" onclick="startGame()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-lg sm:text-xl py-3.5 rounded-2xl border-b-4 border-emerald-700 custom-shadow btn-press pulse-btn flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> スタート！
+                </button>
+            </div>
+
+            <!-- 2. QUIZ SCREEN -->
+            <div id="screen-quiz" class="hidden flex-col justify-between space-y-4 my-auto">
+                
+                <!-- Question Info -->
+                <div class="flex justify-between items-center text-xs font-bold text-slate-500">
+                    <span id="question-number">Q. 1 / 10</span>
+                    <span class="text-blue-600 bg-blue-100 px-2.5 py-0.5 rounded-full">
+                        正解で +10pt
+                    </span>
+                </div>
+
+                <!-- Question Prompt Card -->
+                <div class="bg-white p-4 sm:p-5 rounded-2xl border-2 border-slate-300 shadow-sm space-y-1">
+                    <div class="text-xs font-bold text-blue-600 flex items-center gap-1">
+                        <i class="fa-solid fa-bullhorn"></i> <span id="question-category">指示・確認</span>
+                    </div>
+                    <div id="question-text" class="text-base sm:text-lg font-extrabold text-slate-800 leading-snug">
+                        日本語の質問テキスト
+                    </div>
+                </div>
+
+                <!-- Choice Buttons Grid -->
+                <div id="choices-container" class="space-y-2.5 sm:space-y-3">
+                    <!-- Dynamic Choices loaded via JS -->
+                </div>
+
+                <!-- Feedback Overlay Box with Detailed Explanation -->
+                <div id="feedback-box" class="hidden bg-slate-800 text-white p-4 rounded-2xl space-y-3 border-2 border-slate-700 shadow-xl">
+                    <div id="feedback-result" class="font-extrabold text-base flex items-center justify-between">
+                        <!-- Result Icon and Text -->
+                    </div>
+                    
+                    <div class="bg-slate-700/80 p-3 rounded-xl border border-slate-600 space-y-2">
+                        <!-- Selected Option Explanation -->
+                        <div id="selected-choice-info" class="text-xs p-2.5 rounded-lg bg-slate-800/80 border border-slate-600">
+                            <!-- What the user's selected choice means -->
+                        </div>
+
+                        <!-- Overall Explanation -->
+                        <div class="space-y-1 pt-1 border-t border-slate-600/80">
+                            <div class="text-[11px] font-bold text-amber-300 flex items-center gap-1">
+                                <i class="fa-solid fa-lightbulb"></i> 全体ワンポイント解説
+                            </div>
+                            <div id="feedback-explanation" class="text-xs sm:text-sm text-slate-100 leading-relaxed">
+                                <!-- Explanation Text -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="nextQuestion()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-xl border-b-4 border-blue-700 btn-press text-sm flex items-center justify-center gap-2 mt-1">
+                        次へ進む <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- 3. RESULT SCREEN -->
+            <div id="screen-result" class="hidden flex-col items-center justify-center text-center py-2 space-y-5">
+                <div class="text-center space-y-1">
+                    <div id="result-emoji" class="text-5xl sm:text-6xl floating">🎉</div>
+                    <h2 class="text-xs sm:text-sm font-bold text-slate-500 tracking-wider">GAME COMPLETE!</h2>
+                    <div class="text-2xl sm:text-3xl font-extrabold text-slate-800">最終結果発表</div>
+                </div>
+
+                <!-- Score Card -->
+                <div class="w-full bg-white p-4 rounded-2xl border-2 border-slate-300 shadow-sm space-y-3">
+                    <div>
+                        <div class="text-xs font-bold text-slate-400">TOTAL SCORE</div>
+                        <div class="flex items-baseline justify-center gap-1">
+                            <span id="final-score" class="font-english text-5xl font-extrabold text-blue-600">0</span>
+                            <span class="text-lg font-extrabold text-slate-400">/ 100 点</span>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-3 flex justify-around text-center">
+                        <div>
+                            <div class="text-xs text-slate-400">正解数</div>
+                            <div id="final-correct-count" class="font-bold text-base text-emerald-600">0 / 10</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-400">獲得ランク</div>
+                            <div id="final-rank-name" class="font-extrabold text-base text-amber-600">店長級</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rank Message -->
+                <div id="final-rank-desc" class="text-xs sm:text-sm text-slate-700 bg-amber-50 p-3.5 rounded-xl border border-amber-200 text-left leading-relaxed">
+                    ランク評価コメントがここに入ります。
+                </div>
+
+                <!-- Action Buttons -->
+                <button onclick="startGame()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-base py-3.5 rounded-2xl border-b-4 border-emerald-700 custom-shadow btn-press flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-shuffle"></i> 順番を替えて再挑戦！
+                </button>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-slate-200 p-2 text-center text-[10px] text-slate-500 font-bold border-t border-slate-300">
+            Convenience Store English Quiz • Shuffled & Tap
+        </footer>
+    </div>
+
+    <!-- AUDIO EFFECTS -->
+    <script>
+        const AudioFX = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            },
+            playCorrect() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc1 = this.ctx.createOscillator();
+                const osc2 = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc1.type = 'sine';
+                osc2.type = 'sine';
+
+                osc1.frequency.setValueAtTime(523.25, now); // C5
+                osc1.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc1.frequency.setValueAtTime(783.99, now + 0.2); // G5
+
+                osc2.frequency.setValueAtTime(1046.50, now + 0.2); // C6
+
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + 0.5);
+                osc2.stop(now + 0.5);
+            },
+            playWrong() {
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now); // A3
+                osc.frequency.setValueAtTime(174.61, now + 0.15); // F3
+
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.4);
+            }
+        };
+    </script>
+
+    <!-- GAME LOGIC WITH SHUFFLE & CHOICE EXPLANATIONS -->
+    <script>
+        // Master Question Dataset (with individual choice meanings)
+        const rawQuizData = [
+            {
+                category: "指示・前陳",
+                question: "「手が空いたら前陳（商品の前出し）をしてね」を英語で伝えるなら？",
+                choices: [
+                    { text: "Face up the products when you have free time.", meaning: "【正解】Face up は「商品のラベルを正面に向けて前出し整列する」という意味です。", isCorrect: true },
+                    { text: "Cover the register when you have free time.", meaning: "これは「レジを担当する・会計代わりに入る」という意味になります。", isCorrect: false },
+                    { text: "Check the trash cans when you have free time.", meaning: "これは「ゴミ箱を確認する」という意味になります。", isCorrect: false },
+                    { text: "Clean the floor when you have free time.", meaning: "これは「床を掃除する」という意味になります。", isCorrect: false }
+                ],
+                explanation: "店舗での前陳（前出し）は【Face up】（または Fronting）と言います。「Face up the products」で「商品を綺麗に前出ししてね」という意味になります。"
+            },
+            {
+                category: "店内確認・ゴミ箱",
+                question: "「ゴミ箱がいっぱいになってないか確認して」を英語で言うと？",
+                choices: [
+                    { text: "Check if the trash bins are full.", meaning: "【正解】trash bin (trash can) は「ゴミ箱」、full は「いっぱい」を意味します。", isCorrect: true },
+                    { text: "Check if the hot water pot is full.", meaning: "これは「ポットのお湯がいっぱいか確認する」という意味になってしまいます。", isCorrect: false },
+                    { text: "Empty the cash register right now.", meaning: "これは「今すぐレジの現金を空にする」という意味になります。", isCorrect: false },
+                    { text: "Restock the beverage cooler quickly.", meaning: "これは「飲料ウォークインの在庫を急いで補充する」という意味になります。", isCorrect: false }
+                ],
+                explanation: "ゴミ箱は【trash bin】や【trash can】と呼びます。「Check if ... is full」で「～がいっぱいか確認して」というよく使う店舗フレーズになります。"
+            },
+            {
+                category: "店内確認・給湯",
+                question: "「たまにポットのお湯（の量）を確認してね」を英語で伝えるなら？",
+                choices: [
+                    { text: "Please check the hot water pot occasionally.", meaning: "【正解】hot water pot は「お湯のポット」、occasionally は「たまに/時々」という意味です。", isCorrect: true },
+                    { text: "Please check the cold water bottle occasionally.", meaning: "これは「冷水のボトルを確認する」という意味になります。", isCorrect: false },
+                    { text: "Please check the microwave timer occasionally.", meaning: "これは「電子レンジのタイマーを確認する」という意味になります。", isCorrect: false },
+                    { text: "Please check the coffee machine beans occasionally.", meaning: "これは「コーヒーマシンの豆を確認する」という意味になります。", isCorrect: false }
+                ],
+                explanation: "お湯のポットは【hot water pot】や【hot water dispenser】と言います。「occasionally」や「from time to time」を添えると「たまに確認してね」と優しく伝えられます。"
+            },
+            {
+                category: "勤怠・連絡",
+                question: "「今日休みたいです」と店長や職場に伝える自然で丁寧な英語は？",
+                choices: [
+                    { text: "I'd like to take today off.", meaning: "【正解】take today off は「今日のお休みをいただく」という定番の丁寧表現です。", isCorrect: true },
+                    { text: "I want to go home now.", meaning: "これは「（今すぐ）家に帰りたいです」という意味になり、シフト前に休む連絡とは異なります。", isCorrect: false },
+                    { text: "I am off working today.", meaning: "文法的に不自然で「今日働かない状態です」というぶっきらぼうな響きになります。", isCorrect: false },
+                    { text: "I will quit my job today.", meaning: "これは「今日バイトを辞めます」という退職の宣言になってしまいます！", isCorrect: false }
+                ],
+                explanation: "「今日はお休みをいただきたいです」は【I'd like to take today off】が最も自然で丁寧です。体調不良なら「I'm calling in sick today.」も使えます。"
+            },
+            {
+                category: "シフト・注意",
+                question: "「仕事時間の少し前に来て、遅刻しないでね」を英語で言うと？",
+                choices: [
+                    { text: "Please arrive a few minutes before your shift and don't be late.", meaning: "【正解】a few minutes before your shift（シフトの数分前）＋ don't be late（遅刻しないで）です。", isCorrect: true },
+                    { text: "Please come whenever you want after your shift starts.", meaning: "これは「シフトが始まった後、好きな時間に来てね」という真逆の意味になってしまいます。", isCorrect: false },
+                    { text: "You must work overtime without being late.", meaning: "これは「遅刻せずに残業しなければならない」という意味になります。", isCorrect: false },
+                    { text: "Don't forget to take a long break during your shift.", meaning: "これは「シフト中に長い休憩を取るのを忘れないで」という意味になります。", isCorrect: false }
+                ],
+                explanation: "【arrive a few minutes before your shift】で「シフトの数分前に到着する」、【don't be late】で「遅刻しないで」となります。"
+            },
+            {
+                category: "接客・売り切れ",
+                question: "お客様に「この商品は売り切れです」と説明する英語表現は？",
+                choices: [
+                    { text: "This item is sold out / out of stock.", meaning: "【正解】sold out（売り切れ）や out of stock（在庫切れ）が正しい表現です。", isCorrect: true },
+                    { text: "This item is out of service.", meaning: "out of service は「（機械や設備が）点検中・故障中・使用停止」という意味で使います。", isCorrect: false },
+                    { text: "This item is expired and dangerous.", meaning: "これは「この商品は期限切れで危険です」という意味になってしまいます！", isCorrect: false },
+                    { text: "This item is strictly prohibited.", meaning: "これは「この商品は厳重に禁止されています」という意味になります。", isCorrect: false }
+                ],
+                explanation: "売り切れ・在庫切れは【sold out】または【out of stock】（略してOOS）と言います。「This item is out of stock.」と丁寧にお伝えしましょう。"
+            },
+            {
+                category: "廃棄表示",
+                question: "「Overdue item! This was due for removal on 2026/09/26.」の意味は？",
+                choices: [
+                    { text: "期限切れ商品！2026/09/26に撤去（廃棄）予定でした。", meaning: "【正解】Overdue＝期限切れ、was due for removal＝撤去予定だった、という意味です。", isCorrect: true },
+                    { text: "割引対象品！2026/09/26に値下げ予定です。", meaning: "Overdue や removal に「割引」という意味はありません。", isCorrect: false },
+                    { text: "新商品！2026/09/26に入荷しました。", meaning: "Overdue は「遅れた・期限が切れた」という意味なので「新商品」ではありません。", isCorrect: false },
+                    { text: "予約商品！2026/09/26にお渡し予定です。", meaning: "removal は「取り除き・撤去」なので「お渡し・予約」ではありません。", isCorrect: false }
+                ],
+                explanation: "【Overdue】は「期限切れの」、【due for removal】は「撤去・取り除かれる予定だった」という意味です。見つけたらすぐに店頭から下げましょう！"
+            },
+            {
+                category: "廃棄ルール",
+                question: "「Make sure to carefully subtract price tag number from expiration date!」の意味は？",
+                choices: [
+                    { text: "賞味期限から値札の数字を慎重に引き算してください！", meaning: "【正解】subtract A from B＝「BからAを引き算する」という意味の数学・計算表現です。", isCorrect: true },
+                    { text: "賞味期限に値札の数字を足してください！", meaning: "subtract は「引き算（減算）」であり「足し算（add）」ではありません。", isCorrect: false },
+                    { text: "値札のシールを賞味期限の上に直接貼ってください！", meaning: "subtract は計算の表現なので「シールを貼る」という意味ではありません。", isCorrect: false },
+                    { text: "賞味期限が切れた商品をレジで値引きしてください！", meaning: "subtract は日付計算の指示なので「レジでの値引き」ではありません。", isCorrect: false }
+                ],
+                explanation: "【subtract A from B】は「BからAを引き算する」という意味です。賞味期限（expiration date）から値札（price tag）の数字を引き算して廃棄対象日を出します。"
+            },
+            {
+                category: "用語",
+                question: "店舗やバックヤードでよく見かける「Discard Date」とはどういう意味？",
+                choices: [
+                    { text: "廃棄日（店頭から引き下げる日）", meaning: "【正解】Discard（捨てる・廃棄する）＋ Date（日付）で「廃棄日」という意味です。", isCorrect: true },
+                    { text: "入荷日（商品が届いた日）", meaning: "入荷日は Arrival Date や Delivery Date と表現します。", isCorrect: false },
+                    { text: "製造日（工場の作られた日）", meaning: "製造日は Manufacturing Date (MFG) と表現します。", isCorrect: false },
+                    { text: "販売開始日（発売日）", meaning: "販売開始日は Release Date や Launch Date と表現します。", isCorrect: false }
+                ],
+                explanation: "【Discard】は「廃棄する・捨てる」という意味の動詞です。そのため【Discard Date】は「廃棄日（商品を引く日）」を表します。"
+            },
+            {
+                category: "店舗動詞",
+                question: "「Pull it tonight!」で使われている「Pull」の店舗業務での意味はどれ？",
+                choices: [
+                    { text: "今夜、商品を店頭から下げる（撤去する）", meaning: "【正解】店舗用語で Pull an item は「商品を棚から引き下げる（撤去・廃棄する）」という意味になります。", isCorrect: true },
+                    { text: "今夜、奥から前に引っ張り出して陳列する", meaning: "奥から前に出すのは Fronting や Facing up と言います。", isCorrect: false },
+                    { text: "今夜、商品を強く引っ張って変形させる", meaning: "一般的な「引っ張る」の意味ですが、店舗業務の指示としては誤りです。", isCorrect: false },
+                    { text: "今夜、商品を大量に発注・入荷する", meaning: "発注は Order、入荷は Receive と言います。", isCorrect: false }
+                ],
+                explanation: "店舗での【Pull】は「棚から商品を引き下げる（撤去する）」という意味の業界定番用語です！"
+            }
+        ];
+
+        // State Variables
+        let currentQuizData = [];
+        let currentQuestionIndex = 0;
+        let score = 0; // 10pt per question = 100pt max
+        let correctCount = 0;
+        let isAnswered = false;
+
+        // Elements
+        const screens = {
+            start: document.getElementById('screen-start'),
+            quiz: document.getElementById('screen-quiz'),
+            result: document.getElementById('screen-result')
+        };
+
+        const elements = {
+            scoreDisplay: document.getElementById('score-display'),
+            rankBadge: document.getElementById('rank-badge'),
+            progressBar: document.getElementById('progress-bar'),
+            qNumber: document.getElementById('question-number'),
+            qCategory: document.getElementById('question-category'),
+            qText: document.getElementById('question-text'),
+            choicesContainer: document.getElementById('choices-container'),
+            feedbackBox: document.getElementById('feedback-box'),
+            feedbackResult: document.getElementById('feedback-result'),
+            selectedChoiceInfo: document.getElementById('selected-choice-info'),
+            feedbackExplanation: document.getElementById('feedback-explanation')
+        };
+
+        // Utility: Fisher-Yates Array Shuffle Algorithm
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function showScreen(screenKey) {
+            Object.keys(screens).forEach(key => {
+                screens[key].classList.add('hidden');
+            });
+            screens[screenKey].classList.remove('hidden');
+        }
+
+        function updateRankBadge(currentScore) {
+            let rank = "新人バイト";
+            if (currentScore >= 100) rank = "超・店舗マスター 👑";
+            else if (currentScore >= 80) rank = "ベテラン店長 🏆";
+            else if (currentScore >= 60) rank = "リーダー店員 ⭐";
+            else if (currentScore >= 40) rank = "一人前スタッフ 👍";
+            
+            elements.rankBadge.innerText = rank;
+        }
+
+        function startGame() {
+            // Shuffle question order
+            const shuffledQuestions = shuffleArray(rawQuizData);
+            
+            // Also shuffle choices within each question
+            currentQuizData = shuffledQuestions.map(q => {
+                return {
+                    ...q,
+                    choices: shuffleArray(q.choices)
+                };
+            });
+
+            currentQuestionIndex = 0;
+            score = 0;
+            correctCount = 0;
+            elements.scoreDisplay.innerText = "0";
+            updateRankBadge(0);
+            showScreen('quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isAnswered = false;
+            elements.feedbackBox.classList.add('hidden');
+            
+            const q = currentQuizData[currentQuestionIndex];
+            
+            // Progress Bar & Question Info
+            const progressPercent = ((currentQuestionIndex) / currentQuizData.length) * 100;
+            elements.progressBar.style.width = `${progressPercent}%`;
+            elements.qNumber.innerText = `Q. ${currentQuestionIndex + 1} / ${currentQuizData.length}`;
+            elements.qCategory.innerText = q.category;
+            elements.qText.innerText = q.question;
+
+            // Render Choices
+            elements.choicesContainer.innerHTML = '';
+            q.choices.forEach((choiceObj, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 sm:p-4 rounded-2xl bg-white border-2 border-slate-300 hover:border-blue-500 font-bold text-xs sm:text-sm text-slate-700 btn-press custom-shadow flex items-center justify-between gap-2 transition-all";
+                
+                btn.innerHTML = `
+                    <span class="flex items-center gap-2.5">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 border border-slate-300 text-slate-600 flex items-center justify-center font-english text-xs font-bold shrink-0">
+                            ${String.fromCharCode(65 + index)}
+                        </span>
+                        <span>${choiceObj.text}</span>
+                    </span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+                `;
+                
+                btn.onclick = () => selectChoice(index, choiceObj, btn);
+                elements.choicesContainer.appendChild(btn);
+            });
+        }
+
+        function selectChoice(selectedIndex, selectedChoiceObj, selectedBtn) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = currentQuizData[currentQuestionIndex];
+            const isCorrect = selectedChoiceObj.isCorrect;
+
+            // Highlight choice buttons
+            const choiceButtons = elements.choicesContainer.querySelectorAll('button');
+            choiceButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                const choiceObj = q.choices[idx];
+                
+                if (choiceObj.isCorrect) {
+                    btn.classList.remove('bg-white', 'border-slate-300');
+                    btn.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-800');
+                } else if (idx === selectedIndex && !isCorrect) {
+                    btn.classList.remove('bg-white', 'border-slate-300');
+                    btn.classList.add('bg-rose-50', 'border-rose-500', 'text-rose-800');
+                }
+            });
+
+            // Score Calculation: 10pt per correct answer
+            if (isCorrect) {
+                correctCount++;
+                score += 10;
+                AudioFX.playCorrect();
+                elements.scoreDisplay.innerText = score;
+                updateRankBadge(score);
+
+                elements.feedbackResult.innerHTML = `
+                    <span class="text-emerald-400 font-extrabold flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-lg"></i> 正解！ (+10点)</span>
+                    <span class="text-xs text-emerald-200 bg-emerald-900/60 px-2.5 py-0.5 rounded-full font-bold">Good Job!</span>
+                `;
+            } else {
+                AudioFX.playWrong();
+                elements.feedbackResult.innerHTML = `
+                    <span class="text-rose-400 font-extrabold flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-lg"></i> 惜しい！ (0点)</span>
+                    <span class="text-xs text-slate-300 bg-slate-700 px-2.5 py-0.5 rounded-full font-bold">解説をチェック</span>
+                `;
+            }
+
+            // Show explicit meaning of the chosen option
+            elements.selectedChoiceInfo.innerHTML = `
+                <div class="font-bold ${isCorrect ? 'text-emerald-300' : 'text-rose-300'} mb-1">
+                    👉 あなたが選んだ選択肢の意味:
+                </div>
+                <div class="text-slate-200">${selectedChoiceObj.meaning}</div>
+            `;
+
+            elements.feedbackExplanation.innerText = q.explanation;
+            elements.feedbackBox.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            elements.progressBar.style.width = '100%';
+            showScreen('result');
+
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-correct-count').innerText = `${correctCount} / ${currentQuizData.length}`;
+
+            let rankName = "新人スタッフ";
+            let emoji = "🐣";
+            let desc = "まずは店舗の基本用語からひとつずつ覚えていきましょう！間違えた選択肢の解説を読めばすぐに上達しますよ！";
+
+            if (score === 100) {
+                rankName = "超・店舗英語マスター 👑";
+                emoji = "🌟";
+                desc = "見事100点満点達成！店舗英語のスペシャリストです。留学生スタッフとのコミュニケーションもバッチリですね！";
+            } else if (score >= 80) {
+                rankName = "ベテラン店長級 🏆";
+                emoji = "🏪";
+                desc = "素晴らしい高得点です！現場で必要な英語指示や確認表現をほとんどマスターできています！";
+            } else if (score >= 60) {
+                rankName = "リーダー店員 ⭐";
+                emoji = "✨";
+                desc = "合格ライン突破です！前陳や廃棄などの重要指示・単語の意味をしっかり理解できています！";
+            } else if (score >= 40) {
+                rankName = "一人前スタッフ 👍";
+                emoji = "🔰";
+                desc = "基礎知識はついています！順番が変わっても100点が取れるように、もう一度挑戦してみましょう！";
+            }
+
+            document.getElementById('final-rank-name').innerText = rankName;
+            document.getElementById('final-rank-desc').innerText = desc;
+            document.getElementById('result-emoji').innerText = emoji;
+        }
+    </script>
+</body>
+</html>
